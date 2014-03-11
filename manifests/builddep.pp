@@ -5,6 +5,8 @@ define apt::builddep() {
 
   exec { "apt-builddep-${name}":
     command   => "/usr/bin/apt-get -y --force-yes build-dep ${name}",
+    unless    => "/usr/bin/apt-get -s build-dep ${name} | /bin/grep -q '0 upgraded, 0 newly installed'",
+    provider  => 'shell',
     logoutput => 'on_failure',
     notify    => Exec['apt_update'],
   }
